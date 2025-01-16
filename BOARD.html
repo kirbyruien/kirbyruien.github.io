@@ -97,6 +97,7 @@
 </head>
 <body>
     <div id="container">
+        <audio id= bgMusic src="bg2_copy.mp3" controls autoplay loop></audio>
         <div id="board">
             <div id="timer">01:00</div>
             <div id="scratch-1" style="background-image: url(SCRATCHES.png);"></div>
@@ -110,7 +111,9 @@
         let scratch1 = document.getElementById("scratch-1");
         let board = document.getElementById("board");
         let exitButton = document.getElementById("exit-button");
-        let scratchSound = new Audio("clawsfx.mp3"); // Add your scratch sound file
+        let scratchSound = new Audio("clawsfx.mp3"); // Scratch sound effect
+        let bgMusic = new Audio("bg2_copy.mp3"); // Background music
+        bgMusic.loop = true; // Loop the music during the timer
 
         // Timer countdown function
         function updateTimer() {
@@ -121,6 +124,8 @@
                 timer--;
                 setTimeout(updateTimer, 1000);
             } else {
+                bgMusic.pause(); // Stop the background music
+                bgMusic.currentTime = 0; // Reset the music
                 showScratchMarks();
             }
         }
@@ -143,8 +148,9 @@
             }, 500); // Delay before showing the exit button
         }
 
-        // Start the timer countdown
-        updateTimer();
+        // Start the timer and play background music
+        bgMusic.play(); // Play the background music
+        updateTimer(); // Start the countdown
     </script>
 </body>
 </html>
