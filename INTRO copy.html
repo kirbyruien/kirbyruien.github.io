@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jersey+15&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
+    <title>The Last Class - Intro</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: black;
+            animation: fadeIn 2s ease forwards; /* Fade-in animation */
+            overflow: hidden;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        #container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: url("final_start_background!.png") no-repeat center center;
+            background-size: cover;
+            font-family: "Jacquard 12", sans-serif;
+        }
+
+        #character {
+            position: absolute;
+            bottom: 120px; 
+            left: -20px;
+            height: 400px;
+        }
+
+        #dialogue-box {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 120px;
+            background-color: rgba(0, 0, 0, 0.8);
+            border: 3px solid darkred;
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        #dialogue-box #you-label {
+            position: absolute;
+            top: 5px;
+            left: 10px;
+            font-weight: bold;
+            font-size: 25px;
+            font-family: "Jersey 15";
+        }
+
+        #dialogue-text {
+            margin: auto;
+            text-align: center;
+            font-size: 25px;
+            font-family: "Jersey 15", sans-serif;
+        }
+
+        #arrow-button {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: transparent;
+            color: white;
+            border: 2px solid red;
+            border-radius: 8px;
+            padding: 5px 15px;
+            font-family: "Jacquard 12";
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        #arrow-button:hover {
+            background-color: red;
+            color: black;
+        }
+
+        #escape-button {
+            position: absolute;
+            bottom: 140px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: transparent;
+            color: white;
+            border: 2px solid red;
+            padding: 10px 20px;
+            border-radius: 11px;
+            font-family: "Jacquard 12";
+            font-size: 25px;
+            cursor: pointer;
+            display: none;
+            transition: all 0.3s ease;
+        }
+
+        #escape-button:hover {
+            background-color: red;
+            color: black
+        }
+        audio {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+
+    <audio id="school-bell"><source src="school_bell.mp3"></audio>
+    <audio id="background-music" src="bg2.mp3" controls autoplay loop></audio>
+
+        <img id="character" src="NORMALMCFINAL.gif" alt="Character" onclick="bgm.play()">
+        <div id="dialogue-box">
+            <span id="you-label">You</span>
+            <p id="dialogue-text"></p>
+            <button id="arrow-button">Next</button>
+        </div>
+        <button id="escape-button">Check out the board</button>
+    </div>
+
+   
+    <script>
+        const dialogues = [
+            "Where am I?",
+            "I think I overslept...",
+            "Something feels wrong...",
+            "Wait, what's written on the board?"
+        ];
+        let currentDialogue = 0;
+        const typingSpeed = 50;
+
+        const dialogueText = document.getElementById("dialogue-text");
+        const arrowButton = document.getElementById("arrow-button");
+        const escapeButton = document.getElementById("escape-button");
+        const schoolBell = document.getElementById("school-bell");
+        const bgm = document.getElementById("background-music");
+
+        // Fade-up function for BGM
+        function fadeUpMusic(audio, duration) {
+            let volume = 0;
+            audio.volume = volume;
+            const step = 0.01; // Adjust fade step
+            const interval = (duration / (1 / step)) * 10; // Interval timing
+
+            const fadeInterval = setInterval(() => {
+                if (volume < 1) {
+                    volume += step;
+                    audio.volume = volume;
+                } else {
+                    clearInterval(fadeInterval);
+                }
+            }, interval);
+        }
+
+        // Play school bell sound and then fade up BGM
+        schoolBell.play();
+        schoolBell.addEventListener("ended", () => {
+            bgm.play();
+            fadeUpMusic(bgm, 2000); // 2-second fade-up duration
+        });
+
+        // Display next dialogue
+        function typeDialogue(text, callback) {
+            dialogueText.textContent = '';
+            let i = 0;
+            const interval = setInterval(() => {
+                dialogueText.textContent += text.charAt(i);
+                i++;
+                if (i >= text.length) {
+                    clearInterval(interval);
+                    if (callback) callback();
+                }
+            }, typingSpeed);
+        }
+
+        function showNextDialogue() {
+            if (currentDialogue < dialogues.length) {
+                typeDialogue(dialogues[currentDialogue], () => {});
+                currentDialogue++;
+            } else {
+                arrowButton.style.display = "none";
+                escapeButton.style.display = "block";
+            }
+        }
+
+        arrowButton.addEventListener("click", showNextDialogue);
+
+        escapeButton.addEventListener("click", function() {
+            window.location.href = "BOARD.html"; // Replace with actual path
+        });
+
+        // Initialize first dialogue
+        showNextDialogue();
+    </script>
+</body>
+</html>

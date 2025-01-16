@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
+    <title>The Last Class - Start</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik+Pixels&family
+    =Tiny5&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Jersey+15&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: black;
+            overflow: hidden;
+        }
+
+        #container {
+            width: 960px;
+            height: 540px;
+            position: relative;
+            background: url("final_start_background!.png") no-repeat center center;
+            background-size: cover;
+            font-family: "Tiny5", sans-serif;
+        }
+
+        #fade-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 2s ease;
+            z-index: 1000;
+        }
+
+        #title {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Rubik Pixels', sans-serif;
+            font-size: 55px;
+            color: white;
+            text-align: center;
+            opacity: 0;
+            animation: fadeIn 2s forwards;
+        }
+
+        #subtitle {
+            position: absolute;
+            top: 49%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: "Jersey 15", sans-serif;
+            font-size: 24px;
+            color: white;
+            text-align: center;
+            opacity: 0;
+        }
+
+        #subtitle span {
+            color: red;
+        }
+
+        #start-button {
+            position: absolute;
+            bottom: 200px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: transparent;
+            color: white;
+            border: 2px solid red;
+            border-radius: 10px;
+            padding: 10px 30px;
+            font-family: "Jacquard 12";  
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        #start-button:hover {
+            background-color: red;
+            color: black;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="fade-overlay"></div>
+    <div id="container">
+        <audio id="bgm">
+            <source src="bg_music.mp3" type="audio/mpeg">
+        </audio>
+        <div id="title">The Last Class</div>
+        <div id="subtitle"></div>
+        <button id="start-button">START</button>
+    </div>
+    
+    <script>
+        const subtitleText = "do you have what it takes to make it out ";
+        const highlightText = "<span>alive?</span>";
+        const subtitleElement = document.getElementById("subtitle");
+        const startButton = document.getElementById("start-button");
+        const bgm = document.getElementById("bgm");
+        const fadeOverlay = document.getElementById("fade-overlay");
+
+        // Typing effect for subtitle
+        function typeEffect(text, highlight, element, delay = 50) {
+            let index = 0;
+            element.style.opacity = "1";
+
+            function type() {
+                if (index < text.length) {
+                    element.innerHTML = text.slice(0, index + 1); // Add text as it types
+                    index++;
+                    setTimeout(type, delay);
+                } else {
+                    // After main text types, add the red "alive?"
+                    setTimeout(() => {
+                        element.innerHTML += highlight;
+                    }, delay);
+                }
+            }
+
+            type();
+        }
+
+        // Trigger typing effect after title fades in
+        setTimeout(() => {
+            typeEffect(subtitleText, highlightText, subtitleElement);
+        }, 1600);
+
+        // Start button click event
+        startButton.addEventListener("click", () => {
+            // Fade out the music
+            const fadeAudio = setInterval(() => {
+                if (bgm.volume > 0.1) {
+                    bgm.volume -= 0.1;
+                } else {
+                    bgm.volume = 0;
+                    clearInterval(fadeAudio);
+                }
+            }, 200);
+
+            // Fade overlay effect
+            fadeOverlay.style.opacity = "1";
+            
+
+            // Wait for fade effect, then load the intro page
+            setTimeout(() => {
+                window.location.href = "INTRO copy.html"; // Replace with actual intro page path
+            }, 1500); // 2 seconds for fade effect
+        });
+    </script>
+</body>
+</html>

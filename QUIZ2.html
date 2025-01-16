@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Last Class</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: black;
+            color: white;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        #game-container {
+            width: 960px;
+            height: 540px;
+            margin: auto;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: url("monster 1.png") no-repeat center center/cover;
+            background-size: cover;
+        }
+
+        #game {
+            position: relative;
+            height: 100%;
+        }
+
+        /* Character image (left) */
+        #character {
+            position: absolute;
+            bottom: 255px;
+            left: -20px;
+            width: 300px;
+            height: 300px;
+            background: url("NORMALMCFINAL.gif") no-repeat center/contain;
+            background-size: contain;
+        }
+
+        /* Monster image (right) */
+        #monster {
+            position: absolute;
+            bottom: 35px;
+            right: -50px;
+            width: 680px;
+            height: 680px;
+            background: url("M1.png") no-repeat center/contain;
+            background-size: contain;
+        }
+
+        #dialogue-box {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            right: 10px;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #ff4444;
+            border-radius: 10px;
+            color: white;
+        }
+
+        #dialogue-box h2 {
+            margin: 0 0 10px;
+            font-size: 20px;
+            color: #ff9999;
+        }
+
+        #dialogue-box p {
+            margin: 0 0 10px;
+            font-size: 16px;
+        }
+
+        #options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #333;
+            color: rgb(68, 5, 5);
+            border: 1px solid #888;
+        }
+
+        button:hover {
+            background-color: #ff4444;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="game">
+            <div id="character"></div>
+            <div id="monster"></div>
+            <div id="dialogue-box">
+                <h2 id="npc-name">???</h2>
+                <p id="question">Welcome to the game! Your questions will appear here.</p>
+                <div id="options">
+                    <!-- Options will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const questions = [
+            {
+                npc: "Creepy Monster",
+                question: "What does AI stand for?",
+                options: ["Artificial Intelligence", "Automated Interaction", "Advance Input"],
+                answer: 0,
+            },
+            {
+                npc: "Creepy Monster",
+                question: "What is Generative AI not used for?",
+                options: ["Idea Generation", "Predicting weather", "Sorting data"],
+                answer: 1,
+            },
+            {
+                npc: "Creepy Monster",
+                question: "Which is not an example of Generative AI?",
+                options: ["ChatGPT", "Google Search", "Calculator"],
+                answer: 2,
+            },
+            {
+                npc: "Creepy Monster",
+                question: "What can Generative AI create?",
+                options: ["Emotions", "Perfect Accuracy", "Text"],
+                answer: 2,
+            },
+            {
+                npc: "Creepy Monster",
+                question: "Should you rely on Generative AI?",
+                options: ["Yes", "No", "Maybe"],
+                answer: 1,
+            },
+            {
+                npc: "Creepy Monster",
+                question: "What helps Generative AI answer more accurately?",
+                options: ["Vague Prompts", "Context", "Praying"],
+                answer: 1,
+            }
+            // Add more questions as needed
+        ];
+
+        let currentQuestionIndex = 0;
+
+        function loadQuestion() {
+            const npcNameElement = document.getElementById("npc-name");
+            const questionElement = document.getElementById("question");
+            const optionsContainer = document.getElementById("options");
+
+            const currentQuestion = questions[currentQuestionIndex];
+            npcNameElement.textContent = currentQuestion.npc;
+            questionElement.textContent = currentQuestion.question;
+
+            optionsContainer.innerHTML = "";
+            currentQuestion.options.forEach((option, index) => {
+                const button = document.createElement("button");
+                button.textContent = option;
+                button.onclick = () => checkAnswer(index);
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        function checkAnswer(selectedIndex) {
+            const currentQuestion = questions[currentQuestionIndex];
+
+            if (selectedIndex === currentQuestion.answer) {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < questions.length) {
+                    loadQuestion();
+                } else {
+                    endGame();
+                }
+            } else {
+                alert("Wrong answer! Try again.");
+                loadQuestion();
+            }
+        }
+
+        function endGame() {
+    const gameContainer = document.getElementById("game-container");
+
+    // Create a fade-to-black effect
+    const fadeOverlay = document.createElement("div");
+    fadeOverlay.style.position = "absolute";
+    fadeOverlay.style.top = "0";
+    fadeOverlay.style.left = "0";
+    fadeOverlay.style.width = "100%";
+    fadeOverlay.style.height = "100%";
+    fadeOverlay.style.backgroundColor = "black";
+    fadeOverlay.style.opacity = "0";
+    fadeOverlay.style.transition = "opacity 2s ease";
+    fadeOverlay.style.zIndex = "9999"; // Ensure it overlays all content
+    document.body.appendChild(fadeOverlay);
+
+    // Trigger the fade effect
+    setTimeout(() => {
+        fadeOverlay.style.opacity = "1";
+    }, 100);
+
+    // Navigate to the end page after the fade effect
+    setTimeout(() => {
+        window.location.href = "end.html";
+    }, 2000); // Adjust this to match the fade duration
+}
+
+
+        document.addEventListener("DOMContentLoaded", loadQuestion);
+    </script>
+</body>
+</html>
